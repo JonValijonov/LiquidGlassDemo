@@ -14,7 +14,7 @@ struct ContentView: View {
                 NavigationLink("ConcentricRectangle") {
                     ConcentricRectangleDemoView()
                 }
-                NavigationLink("TabBar") {
+                NavigationLink("TabBar SwiftUI") {
                     TabBarDemoView()
                 }
                 NavigationLink("TabBar UIKit") {

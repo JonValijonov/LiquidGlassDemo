@@ -19,7 +19,7 @@ final class BlurredTabBarController: UITabBarController {
         container.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
         container.isUserInteractionEnabled = false  // don't swallow taps
 
-        let blur = ProgressiveBlurView()
+        let blur = VariableBlurUIView(maxRadius: 2, direction: .blurredAtBottom)
         blur.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         container.addSubview(blur)
 
