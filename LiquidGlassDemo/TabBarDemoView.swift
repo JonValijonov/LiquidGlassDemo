@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct TabBarDemoView: View {
     @State private var selection: TabID = .profile
@@ -12,19 +13,73 @@ struct TabBarDemoView: View {
         case profile, badges, impact
     }
 
+    init() {
+        let font = UIFont.systemFont(ofSize: 14, weight: .bold)
+
+        let normalAttrs: [NSAttributedString.Key: Any] = [
+            .font: font,
+            .foregroundColor: UIColor.systemGreen,
+        ]
+        // Keep the bold 20pt font on the selected state, but let the tint
+        // (the app's AccentColor) drive its colour — no foreground override.
+        let selectedAttrs: [NSAttributedString.Key: Any] = [
+            .font: font,
+        ]
+
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+
+        for layout in [
+            appearance.stackedLayoutAppearance,
+            appearance.inlineLayoutAppearance,
+            appearance.compactInlineLayoutAppearance,
+        ] {
+            layout.normal.titleTextAttributes = normalAttrs
+            layout.selected.titleTextAttributes = selectedAttrs
+            layout.normal.iconColor = .systemGreen
+            // Don't set selected.iconColor — system uses the TabView's tint.
+        }
+
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+        // Forces unselected SF Symbols green — `layout.normal.iconColor`
+        // alone is ignored by the iOS 26 Liquid Glass bar.
+        UITabBar.appearance().unselectedItemTintColor = .systemGreen
+    }
+
     var body: some View {
         TabView(selection: $selection) {
-            Tab("Profile", systemImage: "person.crop.circle", value: TabID.profile) {
+            Tab(value: TabID.profile) {
                 ProfileTab()
+            } label: {
+                tabLabel("Profile", systemImage: "person.crop.circle", tab: .profile)
             }
 
-            Tab("Badges", systemImage: "rosette", value: TabID.badges) {
+            Tab(value: TabID.badges) {
                 BadgesTab()
+            } label: {
+                tabLabel("Badges", systemImage: "rosette", tab: .badges)
             }
 
-            Tab("Impact", systemImage: "chart.line.uptrend.xyaxis", value: TabID.impact) {
+            Tab(value: TabID.impact) {
                 ImpactTab()
+            } label: {
+                tabLabel("Impact", systemImage: "chart.line.uptrend.xyaxis", tab: .impact)
             }
+        }
+    }
+
+    /// Bakes the SF Symbol into a coloured bitmap with `.alwaysOriginal`
+    /// rendering mode so the Liquid Glass bar can't re-template it.
+    private func tabLabel(_ title: String, systemImage: String, tab: TabID) -> some View {
+        let colour: UIColor = (tab == selection) ? .systemRed : .systemGreen
+        let image = UIImage(systemName: systemImage)?
+            .withTintColor(colour, renderingMode: .alwaysOriginal)
+            ?? UIImage()
+        return Label {
+            Text(title)
+        } icon: {
+            Image(uiImage: image)
         }
     }
 }
