@@ -21,6 +21,9 @@ struct ContentView: View {
                     UIKitTabBarDemoView()
                         .ignoresSafeArea()
                 }
+                NavigationLink("Segmented control") {
+                    SegmentedControlDemoView()
+                }
             }
             .navigationTitle("Liquid Glass Demo")
         }

@@ -14,7 +14,7 @@ extension UITabBar {
     /// `UITabBar.appearance()` is a global proxy, so this single call
     /// affects every tab bar in the app.
     static func installSharedAppearance() {
-        let font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        let font = UIFont.systemFont(ofSize: 10, weight: .bold)
 
         let normalAttrs: [NSAttributedString.Key: Any] = [
             .font: font,

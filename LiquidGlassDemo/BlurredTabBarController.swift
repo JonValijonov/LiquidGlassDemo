@@ -10,7 +10,7 @@ import UIKit
 /// `#f6f6f6` linear gradient on top, fading from solid at the bottom to
 /// transparent near the top. Matches the Figma `Fade/Gradient` node.
 final class BlurredTabBarController: UITabBarController {
-    private let fadeHeight: CGFloat = 174
+    private let fadeHeight: CGFloat = 120
 
     /// Container that hosts both the backdrop blur and the gradient overlay
     /// so they move together and share the same frame.
