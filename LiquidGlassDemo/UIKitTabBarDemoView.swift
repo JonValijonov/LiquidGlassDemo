@@ -28,7 +28,7 @@ struct UIKitTabBarDemoView: UIViewControllerRepresentable {
         let impact = UIHostingController(rootView: ImpactTab())
         impact.tabBarItem = Self.makeItem(title: "Impact", systemImage: "chart.line.uptrend.xyaxis", tag: 2)
 
-        let tabBar = UITabBarController()
+        let tabBar = BlurredTabBarController()
         tabBar.viewControllers = [profile, badges, impact]
         return tabBar
     }
