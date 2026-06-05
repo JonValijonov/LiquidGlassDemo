@@ -14,37 +14,7 @@ struct TabBarDemoView: View {
     }
 
     init() {
-        let font = UIFont.systemFont(ofSize: 14, weight: .bold)
-
-        let normalAttrs: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: UIColor.systemGreen,
-        ]
-        // Keep the bold 20pt font on the selected state, but let the tint
-        // (the app's AccentColor) drive its colour — no foreground override.
-        let selectedAttrs: [NSAttributedString.Key: Any] = [
-            .font: font,
-        ]
-
-        let appearance = UITabBarAppearance()
-        appearance.configureWithDefaultBackground()
-
-        for layout in [
-            appearance.stackedLayoutAppearance,
-            appearance.inlineLayoutAppearance,
-            appearance.compactInlineLayoutAppearance,
-        ] {
-            layout.normal.titleTextAttributes = normalAttrs
-            layout.selected.titleTextAttributes = selectedAttrs
-            layout.normal.iconColor = .systemGreen
-            // Don't set selected.iconColor — system uses the TabView's tint.
-        }
-
-        UITabBar.appearance().standardAppearance = appearance
-        UITabBar.appearance().scrollEdgeAppearance = appearance
-        // Forces unselected SF Symbols green — `layout.normal.iconColor`
-        // alone is ignored by the iOS 26 Liquid Glass bar.
-        UITabBar.appearance().unselectedItemTintColor = .systemGreen
+        UITabBar.installSharedAppearance()
     }
 
     var body: some View {
@@ -86,7 +56,7 @@ struct TabBarDemoView: View {
 
 // MARK: - Profile
 
-private struct ProfileTab: View {
+struct ProfileTab: View {
     private struct Row: Identifiable {
         let id = UUID()
         let icon: String
@@ -220,7 +190,7 @@ private struct ProfileTab: View {
 
 // MARK: - Badges
 
-private struct BadgesTab: View {
+struct BadgesTab: View {
     private struct Badge: Identifiable {
         let id = UUID()
         let title: String
@@ -329,7 +299,7 @@ private struct BadgesTab: View {
 
 // MARK: - Impact
 
-private struct ImpactTab: View {
+struct ImpactTab: View {
     private struct Stat: Identifiable {
         let id = UUID()
         let label: String

@@ -17,6 +17,10 @@ struct ContentView: View {
                 NavigationLink("TabBar") {
                     TabBarDemoView()
                 }
+                NavigationLink("TabBar UIKit") {
+                    UIKitTabBarDemoView()
+                        .ignoresSafeArea()
+                }
             }
             .navigationTitle("Liquid Glass Demo")
         }
