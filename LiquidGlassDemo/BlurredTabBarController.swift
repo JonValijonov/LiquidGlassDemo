@@ -19,7 +19,7 @@ final class BlurredTabBarController: UITabBarController {
         container.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
         container.isUserInteractionEnabled = false  // don't swallow taps
 
-        let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+        let blur = ProgressiveBlurView()
         blur.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         container.addSubview(blur)
 
@@ -51,6 +51,51 @@ final class BlurredTabBarController: UITabBarController {
     }
 }
 
+// MARK: - Progressive blur
+
+/// `UIVisualEffectView` masked by a vertical alpha gradient — visually
+/// approximates Figma's "Background blur (progressive)" where the blur
+/// ramps from 0 at the top to a small radius at the bottom. Stock UIKit
+/// can't vary the blur radius itself, so we keep the radius uniform and
+/// fade the effect's *visibility* with a CALayer mask. Same intent: no
+/// blur up top, full blur at the bottom.
+private final class ProgressiveBlurView: UIView {
+    private let blur = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+    private let maskLayer = CAGradientLayer()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        configure()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        configure()
+    }
+
+    private func configure() {
+        blur.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        addSubview(blur)
+
+        // Mask: opaque at top → clear at bottom. Reversed from the
+        // earlier setup so the blur sits at the bottom of the strip and
+        // fades out toward the top.
+        maskLayer.colors = [UIColor.black.cgColor, UIColor.clear.cgColor]
+        maskLayer.startPoint = CGPoint(x: 0.5, y: 1)
+        maskLayer.endPoint = CGPoint(x: 0.5, y: 0)
+        blur.layer.mask = maskLayer
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // CALayer frame changes inside layoutSubviews shouldn't animate.
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        maskLayer.frame = blur.bounds
+        CATransaction.commit()
+    }
+}
+
 // MARK: - Gradient
 
 /// `UIView` whose backing layer is a `CAGradientLayer`. Renders the
@@ -76,8 +121,8 @@ private final class GradientView: UIView {
         let base = UIColor(red: 246/255, green: 246/255, blue: 246/255, alpha: 1)
 //        let base = UIColor.blue
         gradient.colors = [
-            base.withAlphaComponent(0).cgColor,
-            base.cgColor
+            base.cgColor,
+            base.withAlphaComponent(0).cgColor
         ]
         // CAGradientLayer interpolates from `startPoint` (location 0) to
         // `endPoint` (location 1). Bottom → top.
