@@ -14,6 +14,9 @@ struct ContentView: View {
                 NavigationLink("ConcentricRectangle") {
                     ConcentricRectangleDemoView()
                 }
+                NavigationLink("TabBar") {
+                    TabBarDemoView()
+                }
             }
             .navigationTitle("Liquid Glass Demo")
         }
