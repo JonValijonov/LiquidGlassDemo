@@ -32,17 +32,46 @@ struct SearchBarDemoView: View {
         .mapStyle(.standard)
         .ignoresSafeArea(edges: .bottom)
         .safeAreaInset(edge: .bottom) {
-            resultCard
-                .padding(.horizontal, 16)
-                .padding(.bottom, 8)
+            VStack(spacing: 12) {
+                resultCard
+                searchBar
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
         }
         .navigationTitle("Search Location")
         .navigationBarTitleDisplayMode(.inline)
         .toolbarBackground(accent, for: .navigationBar)
         .toolbarBackground(.visible, for: .navigationBar)
         .toolbarColorScheme(.dark, for: .navigationBar)
-        .searchable(text: $searchText, prompt: "Search")
-        .searchPresentationToolbarBehavior(.avoidHidingContent)
+    }
+
+    private var searchBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 16, weight: .semibold))
+                .foregroundStyle(.secondary)
+            TextField("Search", text: $searchText)
+                .textFieldStyle(.plain)
+                .foregroundStyle(.black)
+            if !searchText.isEmpty {
+                Button {
+                    searchText = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        // White container sits behind the field at the exact same frame,
+        // so the search bar reads as solid white instead of liquid glass.
+        .background(
+            Capsule(style: .continuous)
+                .fill(.white)
+                .shadow(color: .black.opacity(0.12), radius: 8, y: 2)
+        )
     }
 
     private var resultCard: some View {

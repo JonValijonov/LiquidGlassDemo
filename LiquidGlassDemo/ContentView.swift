@@ -24,8 +24,13 @@ struct ContentView: View {
                 NavigationLink("Segmented control") {
                     SegmentedControlDemoView()
                 }
-                NavigationLink("Search Bar") {
+                NavigationLink("Search Bar SwiftUI") {
                     SearchBarDemoView()
+                }
+                NavigationLink("Search Bar UIKit") {
+                    UIKitSearchBarDemoView()
+                        .ignoresSafeArea()
+                        .toolbar(.hidden, for: .navigationBar)
                 }
             }
             .navigationTitle("Liquid Glass Demo")
