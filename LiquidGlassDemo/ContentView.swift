@@ -24,6 +24,9 @@ struct ContentView: View {
                 NavigationLink("Segmented control") {
                     SegmentedControlDemoView()
                 }
+                NavigationLink("Search Bar") {
+                    SearchBarDemoView()
+                }
             }
             .navigationTitle("Liquid Glass Demo")
         }
